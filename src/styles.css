@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+body {
+    font-family: "Roboto";
+    color: var(--text-color);
+    margin: 0;
+    --header-color: rgb(250, 230, 190);
+    --sidebar-color: rgb(250, 230, 190);
+    --text-color: black;
+}
+html {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.app-container {
+    height: 100%;
+}
+
+.loading {
+    text-align: center;
+    background-color: grey;
+    color: cornflowerblue;
+}

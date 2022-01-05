@@ -1,0 +1,8 @@
+<div class="loading" *ngIf="!cadastreLoaded" >
+    LOADING
+    <mat-progress-spinner style="margin:0 auto;" class="example-margin" color="Accent" mode="indeterminate" value="50"
+        [diameter]="35">
+    </mat-progress-spinner>
+</div>
+
+<div id="ol-map" class="map-container" fxFlexFill></div>
