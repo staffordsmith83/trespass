@@ -1,32 +1,22 @@
 # Trespass
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.3.
+The Idea: When you are exploring around remote areas, it is often tempting to go down an ephemeral track. But is that private property? Who owns the land? This app uses an old (but mostly in date!) copy of the West Australian Governments Cadastral dataset to show you the ownership type of the land surrounding your location.
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
-
-## Build
-
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The dataset is hosted on my personal Geoserver, and the IP of this will be obscured. This is because the dataset must be purchased.
 
 
-## Packages
+## Geoserver Setup
 
-Angu
+I will provide a docker image of the geoserver later.
+For now, you need to have Geoserver serving a layer called 'CadastrePolygonLGATE_217_1' in a workspace called 'trespass'
+
+
+## Angular setup
+
+Enter the web address of your geoserver in the environment file, then:
+
+```
+npm install
+ng serve -o
+```
+
