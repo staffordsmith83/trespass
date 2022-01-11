@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { LayersService } from 'src/layers/layers.service';
+// import { styles } from '../configs/styles.config';
 
 @Component({
   selector: 'app-footer',
@@ -15,9 +16,9 @@ export class FooterComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onClickChangeStyle() {
+  onClickChangeStyle(layerName: string) {
     // For testing
-    this.layersService.updateStyle('ucl');
+    this.layersService.updateStyle(layerName);
   }
 
 }

@@ -17,13 +17,20 @@ import { MVT } from 'ol/format';
 import { createXYZ } from 'ol/tilegrid';
 import { Store } from '@ngxs/store';
 import { UpdateCadastreTilesLoaded } from './layers.actions';
-import { styles } from 'src/app/configs/styles.config';
+import { Feature } from 'ol';
+import Polygon from 'ol/geom/Polygon';
+import { landTypes } from 'src/app/configs/landTypes.config';
+import Geometry from 'ol/geom/Geometry';
+import RenderFeature from 'ol/render/Feature';
+import { styleFunctions } from 'src/app/configs/styles.config';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class LayersService implements OnInit {
+
+  selectedLandType: string = 'all';
 
   cadastreMvtLayerName = 'trespass:CadastrePolygonLGATE_217_1';
   projection_epsg_no = '900913';  // The old way of specifying 3857, spells Google!
@@ -37,7 +44,7 @@ export class LayersService implements OnInit {
 
 
   cadastreMvt = new VectorTileLayer({
-    style: styles["all"],
+    style: styleFunctions.all,
     source: this.cadastreSource
   })
 
@@ -47,29 +54,42 @@ export class LayersService implements OnInit {
 
   ngOnInit() {
 
-
-
     // var cadastreProperties = this.cadastreSource.getProperties();
     // console.log(cadastreProperties);
     // debugger;
 
+  }
 
+  updateStyle(selectedLandType: keyof typeof styleFunctions) {
 
+    this.cadastreMvt.setStyle(styleFunctions[selectedLandType]);
 
   }
 
-  updateStyle(selectedLandType: keyof typeof styles) {
-    if (selectedLandType in styles) {
-      var style = styles[selectedLandType];
-    }
 
-    else {
-      var style = styles['all'];
-    }
-    console.log('Setting style as' + style);
-    
-    this.cadastreMvt.setStyle(style);
-  }
+  // CANNOT PASS IN VARIABLE TO STYLE FUNCTION BECAUSE THE SCOPE IS DIFFERENT
+  // i.e. Style Functions do not have access to 'this'
+  // See https://gis.stackexchange.com/questions/245815/can-i-create-dynamic-style-functions-in-openlayers-with-class-breaks-obtained-at 
+  // styleFunction(feature: Feature<Geometry> | RenderFeature) {
+  //   console.log(this.selectedLandType);
+
+  //   var color;
+  //   if (feature.get("usage_desc") === this.selectedLandType) {
+  //     color = "red";
+  //   } else {
+  //     color = "black";
+  //   }
+
+  //   var style = new Style({
+  //     stroke: new Stroke({
+  //       color: color,
+  //       width: 5
+  //     })
+  //   });
+
+  //   return style;
+  // }
+
 
 
 }
