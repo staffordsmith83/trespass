@@ -21,6 +21,14 @@ body {
 
 .loading {
     text-align: center;
-    background-color: grey;
-    color: cornflowerblue;
+}
+
+.mat-toolbar.mat-primary {
+    background: rgb(250, 230, 190);
+    color: black;
+}
+
+.footer {
+    background-color: rgb(250, 230, 190);
+    padding: 5px;
 }

@@ -1,7 +1,12 @@
 <div class="app-container" fxLayout="column">
-    <mat-toolbar color="primary">
+    <mat-toolbar color="primary" fxLayout="row">
 
-        <div class="title">Trespass</div>
+        <div class="title" fxFlex fxLayoutAlign="start">Trespass</div>
+
+        <div class="loading" *ngIf="!(cadastreTilesLoaded$ | async)" fxFlex fxLayoutAlign="end">
+            <mat-progress-spinner color="Accent" mode="indeterminate" value="50" [diameter]="35">
+            </mat-progress-spinner>
+        </div>
 
     </mat-toolbar>
 
@@ -12,7 +17,6 @@
 
     </main>
 
-    <footer>
-        Cadastral Information
-    </footer>
+    <app-footer class="footer"></app-footer>
+
 </div>

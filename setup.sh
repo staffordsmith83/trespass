@@ -5,3 +5,5 @@ npm install --save ol
 ng add @angular/material
 npm i @angular/flex-layout @angular/cdk
 # Add imports: [ FlexLayoutModule ] to AppModule
+npm i @ngxs/schematics
+npm i @ngxs/logger-plugin

@@ -15,6 +15,11 @@ import VectorTileLayer from 'ol/layer/VectorTile';
 import VectorTileSource from 'ol/source/VectorTile';
 import { MVT } from 'ol/format';
 import { createXYZ } from 'ol/tilegrid';
+import { LayersService } from '../../layers/layers.service';
+import { Select, Store } from '@ngxs/store';
+import { LayersStateModel } from 'src/layers/layers.state';
+import { Observable } from 'rxjs';
+import { UpdateCadastreTilesLoaded } from 'src/layers/layers.actions';
 
 
 @Component({
@@ -25,69 +30,33 @@ import { createXYZ } from 'ol/tilegrid';
 export class MapComponent implements AfterViewInit {
 
 
-  cadastreMvtLayer = 'trespass:CadastrePolygonLGATE_217_1';
-  projection_epsg_no = '900913';  // The old way of specifying 3857, spells Google!
-
   map: Map | undefined;
-  cadastreLoaded: boolean | undefined;
+  // Watch the state for whether things are loaded yet
+  @Select((state: { layers: LayersStateModel; }) => (state.layers as LayersStateModel).cadastreTilesLoaded) cadastreTilesLoaded$: Observable<boolean> | undefined;
 
-  // cadastreSource = new VectorSource({
-  //   format: new GeoJSON(),
-  //   url: function (extent) {
-  //     return (
-  //       'http://13.238.73.166:8080/geoserver/trespass/ows?service=WFS&' +
-  //       'version=1.0.0&request=GetFeature&typeName=trespass%3ACadastrePolygonLGATE_217_1&' +
-  //       'maxFeatures=50&outputFormat=application%2Fjson&srsname=EPSG:3857&' +
-  //       'bbox=' +
-  //       extent.join(',') +
-  //       ',EPSG:3857'
-  //     );
-  //   },
-  //   strategy: bboxStrategy,
-  // });
+  constructor(private layersService: LayersService,
+    private store: Store) { }
 
-  // cadastre = new VectorLayer({
-  //   source: this.cadastreSource,
-  //   style: new Style({
-  //     stroke: new Stroke({
-  //       color: 'rgba(255, 0, 0, 1.0)',
-  //       width: 2,
-  //     }),
-  //   }),
-  // });
 
-  cadastreSource = new VectorTileSource({
-    tileGrid: createXYZ({ maxZoom: 19 }),
-    format: new MVT(),
-    url: 'http://13.238.73.166:8080/geoserver/gwc/service/tms/1.0.0/' + this.cadastreMvtLayer +
-      '@EPSG%3A' + this.projection_epsg_no + '@pbf/{z}/{x}/{-y}.pbf'
-  })
+  ngOnInit() {
 
-  cadastreMvt = new VectorTileLayer({
-    style: new Style({
-      stroke: new Stroke({
-        color: 'rgba(255, 0, 0, 1.0)',
-        width: 2,
-      }),
-    }),
-    source: this.cadastreSource
-  })
+    // THIS NEEDS TO BE AN OBSERVABLE
+    // Watch for the cadastre layer to load, to set our progress spinner.
+    this.layersService.cadastreSource.on('tileloadend', () => {
+      this.store.dispatch(new UpdateCadastreTilesLoaded(true));
+    });
 
+    this.layersService.cadastreSource.on('tileloadstart', () => {
+      this.store.dispatch(new UpdateCadastreTilesLoaded(false));
+    });
+
+    this.layersService.cadastreSource.on('tileloaderror', () => {
+      this.store.dispatch(new UpdateCadastreTilesLoaded(false));
+      console.log('Error loading Cadastre Layer tiles')
+    });
+  }
 
   ngAfterViewInit(): void {
-
-    // Watch for the cadastre layer to load, to set our progress spinner.
-    this.cadastreSource.on('tileloadend', () => {
-      this.cadastreLoaded = true;
-    });
-
-    this.cadastreSource.on('tileloadstart', () => {
-      this.cadastreLoaded = false;
-    });
-
-    this.cadastreSource.on('tileloaderror', () => {
-      this.cadastreLoaded = false;
-    });
 
 
     this.map = new Map({
@@ -107,10 +76,12 @@ export class MapComponent implements AfterViewInit {
 
         // this.cadastre,
 
-        this.cadastreMvt,
+        this.layersService.cadastreMvt,
 
       ],
       target: 'ol-map'
     });
+
+
   }
 }
